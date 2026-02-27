@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Santo Rosário</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #FAF8F5;
+    --bg-dark: #F0EDE8;
+    --text: #2C2420;
+    --text-light: #8A7E75;
+    --accent: #8B6F47;
+    --accent-light: #C4A97D;
+    --gold: #D4A853;
+    --shadow: rgba(44, 36, 32, 0.08);
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* ===== HOME SCREEN ===== */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+  }
+
+  .home {
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    gap: 2.5rem;
+  }
+
+  .home-icon {
+    width: 56px;
+    height: 56px;
+    opacity: 0.2;
+  }
+
+  .home h1 {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .home p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 1.2rem 1.5rem;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #FFF;
+  }
+
+  .btn-primary .btn-label {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .btn-primary .btn-sub {
+    font-size: 0.75rem;
+    opacity: 0.75;
+    font-weight: 300;
+  }
+
+  .btn-secondary {
+    background: var(--bg-dark);
+    color: var(--text);
+    border: 1px solid rgba(139, 111, 71, 0.12);
+  }
+
+  .btn-secondary .btn-label {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .btn-secondary .btn-sub {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 300;
+  }
+
+  /* ===== MYSTERY SELECTION (Full Rosary) ===== */
+  .selection {
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .selection h2 {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .selection-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .sel-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(139, 111, 71, 0.12);
+    border-radius: 14px;
+    background: #FFF;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+  }
+
+  .sel-btn:active {
+    transform: scale(0.97);
+    background: var(--bg-dark);
+  }
+
+  .sel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sel-btn .sel-name {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .sel-btn .sel-days {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 0.1rem;
+  }
+
+  .back-link {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  /* ===== PRAYER SCREEN ===== */
+  .prayer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .prayer-header {
+    padding: 1rem 1.25rem 0.75rem;
+    text-align: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .prayer-back {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+  }
+
+  .prayer-title {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .prayer-days {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-top: 0.15rem;
+    font-weight: 300;
+  }
+
+  .progress-bar {
+    height: 2px;
+    background: var(--bg-dark);
+    flex-shrink: 0;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-light);
+    transition: width 0.4s ease;
+  }
+
+  /* Slide container */
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1.75rem;
+    text-align: center;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+  }
+
+  .slide.active { transform: translateX(0); opacity: 1; }
+  .slide.left   { transform: translateX(-100%); opacity: 0; }
+  .slide.right  { transform: translateX(100%); opacity: 0; }
+
+  .mystery-number {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    opacity: 0.35;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .mystery-name {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+  }
+
+  .mystery-desc {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--text-light);
+    line-height: 1.6;
+    max-width: 340px;
+  }
+
+  .prayer-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 1.5rem 2rem;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(139, 111, 71, 0.2);
+    background: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--accent);
+    font-size: 1.2rem;
+  }
+
+  .nav-btn:active { transform: scale(0.92); background: var(--bg-dark); }
+  .nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .nav-btn:disabled:active { transform: none; background: #FFF; }
+
+  .dot-indicators {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    opacity: 0.25;
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    opacity: 1;
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  /* Completion screen */
+  .completion {
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .completion-icon {
+    font-size: 3rem;
+    opacity: 0.6;
+  }
+
+  .completion h2 {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .completion p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  /* Full rosary transition */
+  .set-transition {
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .set-transition .set-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .set-transition h2 {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .set-transition .set-days {
+    font-size: 0.8rem;
+    color: var(--text-light);
+  }
+
+  .set-transition .btn {
+    margin-top: 1rem;
+    padding: 1rem 2.5rem;
+  }
+
+  /* Swipe hint animation */
+  @keyframes swipeHint {
+    0%, 100% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(-8px); opacity: 1; }
+  }
+
+  .swipe-hint {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0;
+    animation: swipeHint 2s ease-in-out 1.5s 3;
+    animation-fill-mode: forwards;
+  }
+
+  .swipe-hint span {
+    display: inline-block;
+    animation: swipeHint 2s ease-in-out 1.5s 3;
+  }
+
+  /* Safe area for notched phones */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    .prayer-header { padding-top: calc(env(safe-area-inset-top) + 0.75rem); }
+    .prayer-footer { padding-bottom: calc(env(safe-area-inset-bottom) + 1.5rem); }
+    .home, .selection, .completion, .set-transition {
+      padding-top: calc(env(safe-area-inset-top) + 2rem);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- HOME SCREEN -->
+<div id="homeScreen" class="screen home">
+  <svg class="home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+    <circle cx="12" cy="4" r="2.5"/>
+    <circle cx="12" cy="10" r="1.5"/>
+    <circle cx="12" cy="15" r="1.5"/>
+    <circle cx="12" cy="20" r="1.5"/>
+    <circle cx="7" cy="12.5" r="1.5"/>
+    <circle cx="17" cy="12.5" r="1.5"/>
+  </svg>
+  <h1>Santo Rosário</h1>
+  <p>Contemple os mistérios com tranquilidade e sem distrações.</p>
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="startDaily()">
+      <span class="btn-label">Terço do Dia</span>
+      <span class="btn-sub" id="todayLabel"></span>
+    </button>
+    <button class="btn btn-secondary" onclick="showSelection()">
+      <span class="btn-label">Rosário Completo</span>
+      <span class="btn-sub">Todos os 20 mistérios</span>
+    </button>
+  </div>
+</div>
+
+<!-- SELECTION SCREEN (Full Rosary starting point) -->
+<div id="selectionScreen" class="screen selection hidden">
+  <h2>Escolha o início</h2>
+  <div class="selection-grid">
+    <button class="sel-btn" onclick="startFull(0)">
+      <span class="sel-dot" style="background:#D4A853"></span>
+      <div>
+        <div class="sel-name">Gozosos</div>
+        <div class="sel-days">Segundas e Sábados</div>
+      </div>
+    </button>
+    <button class="sel-btn" onclick="startFull(1)">
+      <span class="sel-dot" style="background:#A8C4D4"></span>
+      <div>
+        <div class="sel-name">Luminosos</div>
+        <div class="sel-days">Quintas-feiras</div>
+      </div>
+    </button>
+    <button class="sel-btn" onclick="startFull(2)">
+      <span class="sel-dot" style="background:#C48A7C"></span>
+      <div>
+        <div class="sel-name">Dolorosos</div>
+        <div class="sel-days">Terças e Sextas-feiras</div>
+      </div>
+    </button>
+    <button class="sel-btn" onclick="startFull(3)">
+      <span class="sel-dot" style="background:#9BB88D"></span>
+      <div>
+        <div class="sel-name">Gloriosos</div>
+        <div class="sel-days">Quartas-feiras e Domingos</div>
+      </div>
+    </button>
+  </div>
+  <button class="back-link" onclick="goHome()">← Voltar</button>
+</div>
+
+<!-- PRAYER SCREEN -->
+<div id="prayerScreen" class="screen prayer hidden">
+  <div class="prayer-header">
+    <button class="prayer-back" onclick="goHome()">←</button>
+    <div class="prayer-title" id="prayerTitle"></div>
+    <div class="prayer-days" id="prayerDays"></div>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="slide-container" id="slideContainer">
+    <div class="slide active" id="slideContent">
+      <div class="mystery-number" id="mysteryNum"></div>
+      <div class="mystery-name" id="mysteryName"></div>
+      <div class="mystery-desc" id="mysteryDesc"></div>
+    </div>
+  </div>
+  <div class="prayer-footer">
+    <button class="nav-btn" id="prevBtn" onclick="prevMystery()">‹</button>
+    <div class="dot-indicators" id="dots"></div>
+    <button class="nav-btn" id="nextBtn" onclick="nextMystery()">›</button>
+  </div>
+</div>
+
+<!-- SET TRANSITION (Full Rosary) -->
+<div id="transitionScreen" class="screen set-transition hidden">
+  <div class="set-label">Próximo conjunto</div>
+  <h2 id="nextSetTitle"></h2>
+  <div class="set-days" id="nextSetDays"></div>
+  <button class="btn btn-primary" onclick="continueFullRosary()">
+    <span class="btn-label">Continuar</span>
+  </button>
+  <button class="back-link" onclick="goHome()">Encerrar</button>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div id="completionScreen" class="screen completion hidden">
+  <div class="completion-icon">✝</div>
+  <h2>Oração concluída</h2>
+  <p>Que os mistérios contemplados iluminem o seu dia.</p>
+  <button class="btn btn-primary" onclick="goHome()" style="max-width:240px; width:100%">
+    <span class="btn-label">Voltar ao início</span>
+  </button>
+</div>
+
+<script>
+  // ====== DATA ======
+  const mysterySets = [
+    {
+      title: "Mistérios Gozosos",
+      days: "Segundas e Sábados",
+      color: "#D4A853",
+      mysteries: [
+        { name: "A Anunciação", desc: "O Anjo Gabriel anuncia a Maria que ela será a Mãe de Jesus." },
+        { name: "A Visitação", desc: "Maria visita sua prima Santa Isabel." },
+        { name: "O Nascimento", desc: "Jesus nasce em Belém." },
+        { name: "A Apresentação", desc: "Jesus é apresentado no Templo." },
+        { name: "A Perda e Encontro", desc: "Maria e José encontram Jesus no Templo entre os doutores." }
+      ]
+    },
+    {
+      title: "Mistérios Luminosos",
+      days: "Quintas-feiras",
+      color: "#A8C4D4",
+      mysteries: [
+        { name: "O Batismo", desc: "Jesus é batizado no Rio Jordão." },
+        { name: "As Bodas de Caná", desc: "Jesus realiza seu primeiro milagre." },
+        { name: "O Anúncio do Reino", desc: "Jesus convida à conversão e anuncia o Reino de Deus." },
+        { name: "A Transfiguração", desc: "Jesus se transfigura no Monte Tabor." },
+        { name: "A Instituição da Eucaristia", desc: "Jesus institui a Eucaristia na Última Ceia." }
+      ]
+    },
+    {
+      title: "Mistérios Dolorosos",
+      days: "Terças e Sextas-feiras",
+      color: "#C48A7C",
+      mysteries: [
+        { name: "A Agonia", desc: "Jesus ora no Horto das Oliveiras." },
+        { name: "A Flagelação", desc: "Jesus é açoitado." },
+        { name: "A Coroação de Espinhos", desc: "Jesus é coroado de espinhos." },
+        { name: "O Caminho do Calvário", desc: "Jesus carrega a cruz." },
+        { name: "A Crucificação", desc: "Jesus morre na cruz." }
+      ]
+    },
+    {
+      title: "Mistérios Gloriosos",
+      days: "Quartas-feiras e Domingos",
+      color: "#9BB88D",
+      mysteries: [
+        { name: "A Ressurreição", desc: "Jesus ressuscita dos mortos." },
+        { name: "A Ascensão", desc: "Jesus sobe ao Céu." },
+        { name: "A Descida do Espírito Santo", desc: "O Espírito Santo desce sobre os apóstolos." },
+        { name: "A Assunção", desc: "Maria é elevada ao Céu em corpo e alma." },
+        { name: "A Coroação", desc: "Maria é coroada Rainha do Céu e da Terra." }
+      ]
+    }
+  ];
+
+  // Day of week → mystery set index
+  // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  const dayMap = { 0: 3, 1: 0, 2: 2, 3: 3, 4: 1, 5: 2, 6: 0 };
+
+  const dayNames = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+
+  // ====== STATE ======
+  let currentSetIndex = 0;
+  let currentMystery = 0;
+  let isFullRosary = false;
+  let fullRosaryOrder = [];
+  let fullRosaryStep = 0;
+  let swipeHintShown = false;
+
+  // ====== INIT ======
+  function init() {
+    const today = new Date();
+    const dow = today.getDay();
+    const setIdx = dayMap[dow];
+    const todaySet = mysterySets[setIdx];
+    document.getElementById('todayLabel').textContent = todaySet.title + " · " + dayNames[dow];
+  }
+  init();
+
+  // ====== SCREEN NAVIGATION ======
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function goHome() {
+    showScreen('homeScreen');
+    isFullRosary = false;
+  }
+
+  // ====== DAILY TERÇO ======
+  function startDaily() {
+    const dow = new Date().getDay();
+    currentSetIndex = dayMap[dow];
+    currentMystery = 0;
+    isFullRosary = false;
+    openPrayerScreen();
+  }
+
+  // ====== FULL ROSARY ======
+  function showSelection() {
+    showScreen('selectionScreen');
+  }
+
+  function startFull(startIdx) {
+    isFullRosary = true;
+    fullRosaryOrder = [];
+    for (let i = 0; i < 4; i++) {
+      fullRosaryOrder.push((startIdx + i) % 4);
+    }
+    fullRosaryStep = 0;
+    currentSetIndex = fullRosaryOrder[0];
+    currentMystery = 0;
+    openPrayerScreen();
+  }
+
+  function continueFullRosary() {
+    currentSetIndex = fullRosaryOrder[fullRosaryStep];
+    currentMystery = 0;
+    openPrayerScreen();
+  }
+
+  // ====== PRAYER SCREEN ======
+  function openPrayerScreen() {
+    const set = mysterySets[currentSetIndex];
+    document.getElementById('prayerTitle').textContent = set.title;
+    document.getElementById('prayerDays').textContent = set.days;
+    document.getElementById('prayerTitle').style.color = set.color;
+
+    // Build dots
+    const dotsEl = document.getElementById('dots');
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      dotsEl.appendChild(d);
+    }
+
+    updateSlide(false);
+    showScreen('prayerScreen');
+  }
+
+  function updateSlide(animate) {
+    const set = mysterySets[currentSetIndex];
+    const m = set.mysteries[currentMystery];
+
+    if (animate) {
+      // The current slide will be recreated, just update
+    }
+
+    document.getElementById('mysteryNum').textContent = currentMystery + 1;
+    document.getElementById('mysteryName').textContent = m.name;
+    document.getElementById('mysteryDesc').textContent = m.desc;
+
+    // Progress
+    const pct = ((currentMystery + 1) / 5) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    // Dots
+    document.querySelectorAll('#dots .dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentMystery);
+    });
+
+    // Nav buttons
+    const isFirst = currentMystery === 0 && (!isFullRosary || fullRosaryStep === 0);
+    document.getElementById('prevBtn').disabled = isFirst;
+  }
+
+  // ====== SLIDE ANIMATION ======
+  function animateSlide(direction, callback) {
+    const container = document.getElementById('slideContainer');
+    const oldSlide = document.getElementById('slideContent');
+
+    // Create new slide
+    const newSlide = oldSlide.cloneNode(true);
+    newSlide.id = 'slideContent';
+    newSlide.className = 'slide ' + (direction === 'next' ? 'right' : 'left');
+    container.appendChild(newSlide);
+
+    // Update content in new slide
+    callback(newSlide);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        oldSlide.className = 'slide ' + (direction === 'next' ? 'left' : 'right');
+        newSlide.className = 'slide active';
+      });
+    });
+
+    // Cleanup
+    setTimeout(() => {
+      if (oldSlide.parentNode) oldSlide.remove();
+    }, 400);
+  }
+
+  function updateSlideContent(slideEl) {
+    const set = mysterySets[currentSetIndex];
+    const m = set.mysteries[currentMystery];
+    slideEl.querySelector('.mystery-number').textContent = currentMystery + 1;
+    slideEl.querySelector('.mystery-name').textContent = m.name;
+    slideEl.querySelector('.mystery-desc').textContent = m.desc;
+  }
+
+  // ====== NAVIGATION ======
+  function nextMystery() {
+    if (currentMystery < 4) {
+      currentMystery++;
+      animateSlide('next', updateSlideContent);
+      updateSlide(true);
+    } else {
+      // End of current set
+      if (isFullRosary && fullRosaryStep < 3) {
+        fullRosaryStep++;
+        showSetTransition();
+      } else {
+        showScreen('completionScreen');
+      }
+    }
+  }
+
+  function prevMystery() {
+    if (currentMystery > 0) {
+      currentMystery--;
+      animateSlide('prev', updateSlideContent);
+      updateSlide(true);
+    } else if (isFullRosary && fullRosaryStep > 0) {
+      fullRosaryStep--;
+      currentSetIndex = fullRosaryOrder[fullRosaryStep];
+      currentMystery = 4;
+      openPrayerScreen();
+      currentMystery = 4;
+      updateSlide(false);
+      document.getElementById('mysteryNum').textContent = '5';
+      const set = mysterySets[currentSetIndex];
+      document.getElementById('mysteryName').textContent = set.mysteries[4].name;
+      document.getElementById('mysteryDesc').textContent = set.mysteries[4].desc;
+      document.querySelectorAll('#dots .dot').forEach((d, i) => {
+        d.classList.toggle('active', i === 4);
+      });
+      document.getElementById('progressFill').style.width = '100%';
+    }
+  }
+
+  function showSetTransition() {
+    const nextSet = mysterySets[fullRosaryOrder[fullRosaryStep]];
+    document.getElementById('nextSetTitle').textContent = nextSet.title;
+    document.getElementById('nextSetDays').textContent = nextSet.days;
+    showScreen('transitionScreen');
+  }
+
+  // ====== SWIPE / TOUCH ======
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchMoved = false;
+
+  document.getElementById('slideContainer').addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchMoved = false;
+  }, { passive: true });
+
+  document.getElementById('slideContainer').addEventListener('touchmove', (e) => {
+    touchMoved = true;
+  }, { passive: true });
+
+  document.getElementById('slideContainer').addEventListener('touchend', (e) => {
+    if (!touchMoved) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+
+    // Only act on horizontal swipes
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) {
+        nextMystery();
+      } else {
+        prevMystery();
+      }
+    }
+  }, { passive: true });
+
+  // Keyboard support for desktop
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('prayerScreen').classList.contains('hidden')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      nextMystery();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevMystery();
+    } else if (e.key === 'Escape') {
+      goHome();
+    }
+  });
+
+  // Also support click/tap on slide area to go next
+  document.getElementById('slideContainer').addEventListener('click', (e) => {
+    // Only on non-touch click (desktop)
+    if (e.pointerType === 'mouse' || !('ontouchstart' in window)) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      if (x > rect.width * 0.35) {
+        nextMystery();
+      } else {
+        prevMystery();
+      }
+    }
+  });
+</script>
+</body>
+</html>
