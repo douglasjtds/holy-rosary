@@ -5,38 +5,55 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev      # Start development server at http://localhost:3000
-npm run build    # Build for production
-npm run lint     # Run ESLint
+nvm use v22.11.0  # Required — Next.js needs Node >= 20 (default v18 will fail)
+npm run dev       # Start development server at http://localhost:3000
+npm run build     # Build for production
+npm run lint      # Run ESLint
 ```
 
 There are no tests configured in this project.
 
+> If you see `@tailwindcss/oxide` native binding errors after switching Node versions, run `rm -rf node_modules package-lock.json && npm install`.
+
 ## Project Purpose
 
-A Holy Rosary (Santo Rosário) prayer guide app in Brazilian Portuguese. It lets users pray either the daily mystery set (chosen automatically by day of the week) or the full rosary (all 20 mysteries across 4 sets).
+A Holy Rosary (Santo Rosário) prayer guide app in Brazilian Portuguese. Users can pray the daily mystery set (chosen automatically by day of the week) or the full rosary (all 20 mysteries across 4 sets).
 
 ## Architecture
 
-This is a **Next.js 16 + TypeScript + Tailwind CSS v4** project using the App Router (`app/` directory).
+**Next.js 16 + TypeScript + Tailwind CSS v4**, App Router (`app/` directory), single `'use client'` page.
 
-### Current state
+### Key files
 
-The app is in early development. The Next.js scaffold in `app/` is still the default `create-next-app` template — `app/page.tsx` has not been customized yet.
+- `app/page.tsx` — top-level state machine (`Screen` + `Session` state), renders one screen at a time
+- `app/data/mysteries.ts` — all data: `mysterySets` (4 sets × 5 mysteries), `dayMap` (DOW → set index), `dayNames`, TypeScript interfaces
+- `app/globals.css` — CSS custom properties (colors, fonts), global resets, `screen-enter` and slide animation keyframes
+- `app/layout.tsx` — Crimson Text + Inter fonts via `next/font/google`, `lang="pt-BR"`, `viewportFit: cover`
+- `app/components/` — one file per screen: `HomeScreen`, `SelectionScreen`, `PrayerScreen`, `TransitionScreen`, `CompletionScreen`
+- `inspiration/rosario.html` — original single-file HTML prototype (reference only, not used at runtime)
 
-The **actual application logic** lives in `inspiration/rosario.html` — a self-contained single-file HTML prototype (no frameworks) that demonstrates the target UX. This file is the reference implementation to port into Next.js:
+### State machine (`app/page.tsx`)
 
-- **Screens**: Home, Mystery Selection, Prayer (slide carousel), Set Transition, Completion
-- **State machine**: managed via vanilla JS (`currentSetIndex`, `currentMystery`, `isFullRosary`, `fullRosaryOrder`, `fullRosaryStep`)
-- **Data**: `mysterySets` array with 4 sets × 5 mysteries each (Gozosos, Luminosos, Dolorosos, Gloriosos)
-- **Day mapping**: `dayMap` maps `Date.getDay()` (0=Sun … 6=Sat) to mystery set index
-- **Navigation**: prev/next buttons, swipe gestures (touchstart/touchend), keyboard arrows, and click-zone on slide area
-- **Animation**: CSS slide transitions (`translateX`) with cloned DOM nodes
+`screen` cycles through: `home → selection → prayer → transition → prayer → … → completion`
 
-### Key design decisions in the prototype
+`session` tracks: `setIndex`, `startAt` (which mystery to start on), `isFullRosary`, `fullRosaryOrder` (array of 4 set indices starting from the chosen set), `fullRosaryStep` (0–3).
 
-- Mystery sets are color-coded (gold, blue, terracotta, green)
-- Typography: Crimson Text (serif, for headings/mystery text) + Inter (sans, for UI)
-- Color palette uses CSS custom properties (`--accent`, `--gold`, etc.) with a warm parchment background
-- Mobile-first with safe-area insets for notched phones
-- No external state management — all state is module-level JS variables
+### Styling conventions
+
+- Tailwind utilities for layout (`flex`, `gap`, `rounded`, etc.)
+- Inline `style` props for brand colors via CSS vars (`var(--accent)`, `var(--bg)`, etc.)
+- Inline `fontFamily` for serif: `"var(--font-crimson), Georgia, serif"`
+- Brand CSS vars defined in `globals.css`: `--bg`, `--bg-dark`, `--text`, `--text-light`, `--accent`, `--accent-light`, `--gold`
+- Each mystery set has its own `color` hex used for titles and accents
+
+### PrayerScreen slide animation
+
+Uses a `SlideState` discriminated union:
+- `{ phase: 'idle', idx }` — renders one absolute div
+- `{ phase: 'animating', currentIdx, nextIdx, dir }` — renders two absolute divs with CSS animation classes
+
+On navigate: set animating → 370 ms timeout → back to idle. CSS classes: `slide-enter-forward/backward`, `slide-exit-forward/backward` (defined in `globals.css`).
+
+Keyboard handler uses `useEffect` with a bare `navigate` function ref (not in the deps array) to avoid stale closures — the ref is kept current via `slideStateRef.current = slideState`.
+
+Navigation supports: prev/next buttons, swipe gestures (touchstart/touchend with 50 px threshold), keyboard arrows + Space (forward) + Escape (home), and click-zone (right 65% = forward, left 35% = backward) on desktop.
