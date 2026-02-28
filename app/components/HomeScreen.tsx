@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface HomeScreenProps {
   todayTitle: string;
   todayDay: string;
@@ -18,21 +20,15 @@ export default function HomeScreen({
       className="screen-enter absolute inset-0 flex flex-col items-center justify-center gap-10 p-8"
       style={{ fontFamily: "var(--font-inter), -apple-system, sans-serif" }}
     >
-      {/* Rosary icon */}
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        style={{ width: 56, height: 56, opacity: 0.2, color: "var(--accent)" }}
-      >
-        <circle cx="12" cy="4" r="2.5" />
-        <circle cx="12" cy="10" r="1.5" />
-        <circle cx="12" cy="15" r="1.5" />
-        <circle cx="12" cy="20" r="1.5" />
-        <circle cx="7" cy="12.5" r="1.5" />
-        <circle cx="17" cy="12.5" r="1.5" />
-      </svg>
+      {/* Logo */}
+      <Image
+        src="/images/logo.jpg"
+        alt="Santo Rosário"
+        width={120}
+        height={120}
+        style={{ borderRadius: "50%", objectFit: "cover" }}
+        priority
+      />
 
       <h1
         style={{

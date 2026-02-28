@@ -33,7 +33,7 @@ export default function SelectionScreen({ onSelect, onBack }: SelectionScreenPro
             style={{
               padding: "1rem 1.2rem",
               border: "1px solid rgba(139, 111, 71, 0.12)",
-              background: "#FFF",
+              background: "var(--bg-dark)",
             }}
           >
             <span

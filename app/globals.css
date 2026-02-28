@@ -11,6 +11,16 @@
   --shadow: rgba(44, 36, 32, 0.08);
 }
 
+[data-theme="dark"] {
+  --bg: #1A1614;
+  --bg-dark: #241F1C;
+  --text: #EDE8E1;
+  --text-light: #8A8078;
+  --accent: #C4975A;
+  --accent-light: #D4A853;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
 @theme inline {
   --font-sans: var(--font-inter);
   --font-serif: var(--font-crimson);
