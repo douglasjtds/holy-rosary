@@ -65,6 +65,32 @@ export default function PrayerScreen({
     }
   };
 
+  // Screen Wake Lock: prevent display sleep during prayer
+  useEffect(() => {
+    if (!('wakeLock' in navigator)) return;
+    let wakeLock: WakeLockSentinel | null = null;
+
+    async function acquire() {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+      } catch {
+        // Silently ignore — battery saver or permission denied
+      }
+    }
+
+    acquire();
+
+    function onVisibilityChange() {
+      if (document.visibilityState === 'visible') acquire();
+    }
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      wakeLock?.release();
+    };
+  }, []);
+
   // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
