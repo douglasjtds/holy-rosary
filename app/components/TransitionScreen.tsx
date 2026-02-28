@@ -22,7 +22,7 @@ export default function TransitionScreen({ nextSet, onContinue, onHome }: Transi
           letterSpacing: "0.1em",
         }}
       >
-        Próximo conjunto
+        Próximo terço
       </div>
 
       <h2

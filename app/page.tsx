@@ -7,6 +7,7 @@ import SelectionScreen from './components/SelectionScreen';
 import PrayerScreen from './components/PrayerScreen';
 import TransitionScreen from './components/TransitionScreen';
 import CompletionScreen from './components/CompletionScreen';
+import ThemeToggleButton from './components/ThemeToggleButton';
 
 type Screen = 'home' | 'selection' | 'prayer' | 'transition' | 'completion';
 
@@ -25,51 +26,16 @@ function buildFullRosaryOrder(startIdx: number): number[] {
   return [0, 1, 2, 3].map((i) => (startIdx + i) % 4);
 }
 
-function MoonIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path
-        d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
-function SunIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="8" cy="8" r="3" fill="currentColor" />
-      <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <line x1="8" y1="1" x2="8" y2="3" />
-        <line x1="8" y1="13" x2="8" y2="15" />
-        <line x1="1" y1="8" x2="3" y2="8" />
-        <line x1="13" y1="8" x2="15" y2="8" />
-        <line x1="2.93" y1="2.93" x2="4.34" y2="4.34" />
-        <line x1="11.66" y1="11.66" x2="13.07" y2="13.07" />
-        <line x1="13.07" y1="2.93" x2="11.66" y2="4.34" />
-        <line x1="4.34" y1="11.66" x2="2.93" y2="13.07" />
-      </g>
-    </svg>
-  );
-}
-
 export default function Home() {
-  const [isDark, setIsDark] = useState(false);
-  const [themeReady, setThemeReady] = useState(false);
-
-  // Read saved theme from localStorage only on the client (after hydration)
-  useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') setIsDark(true);
-    setThemeReady(true);
-  }, []);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('theme') === 'dark';
+  });
 
   useEffect(() => {
-    if (!themeReady) return;
     document.documentElement.dataset.theme = isDark ? 'dark' : '';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  }, [isDark, themeReady]);
+  }, [isDark]);
 
   const [screen, setScreen] = useState<Screen>('home');
   const [session, setSession] = useState<Session>({
@@ -136,6 +102,8 @@ export default function Home() {
     setScreen('home');
   }
 
+  const toggleTheme = () => setIsDark(d => !d);
+
   const todaySet = mysterySets[todaySetIdx];
   const currentSet = mysterySets[session.setIndex];
   const nextSet =
@@ -150,28 +118,19 @@ export default function Home() {
       className="relative w-full h-full"
       style={{ background: "var(--bg)", color: "var(--text)" }}
     >
-      <button
-        onClick={() => setIsDark(d => !d)}
-        style={{
-          position: 'absolute',
-          top: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)',
-          right: '0.75rem',
-          zIndex: 100,
-          width: 36,
-          height: 36,
-          borderRadius: '50%',
-          border: '1px solid rgba(139,111,71,0.2)',
-          background: 'var(--bg-dark)',
-          color: 'var(--text-light)',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        aria-label={isDark ? 'Ativar tema claro' : 'Ativar tema escuro'}
-      >
-        {isDark ? <SunIcon /> : <MoonIcon />}
-      </button>
+      {/* Overlay theme button — hidden on prayer screen (rendered inside its header) */}
+      {screen !== 'prayer' && (
+        <ThemeToggleButton
+          isDark={isDark}
+          onToggle={toggleTheme}
+          style={{
+            position: 'absolute',
+            top: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)',
+            right: '0.75rem',
+            zIndex: 100,
+          }}
+        />
+      )}
 
       {screen === 'home' && (
         <HomeScreen
@@ -195,6 +154,8 @@ export default function Home() {
           onComplete={handleSetComplete}
           onPrevSet={handlePrevSet}
           onHome={goHome}
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
         />
       )}
 
