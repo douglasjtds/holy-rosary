@@ -1,12 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import { Lang, ui } from '../data/i18n';
 
 interface HomeScreenProps {
   todayTitle: string;
   todayDay: string;
   onStartDaily: () => void;
   onShowSelection: () => void;
+  lang: Lang;
+  onToggleLang: () => void;
 }
 
 export default function HomeScreen({
@@ -14,7 +17,11 @@ export default function HomeScreen({
   todayDay,
   onStartDaily,
   onShowSelection,
+  lang,
+  onToggleLang,
 }: HomeScreenProps) {
+  const t = ui[lang].home;
+
   return (
     <div
       className="screen-enter absolute inset-0 flex flex-col items-center justify-center gap-10 p-8"
@@ -39,7 +46,7 @@ export default function HomeScreen({
           color: "var(--text)",
         }}
       >
-        Santo Rosário
+        {t.title}
       </h1>
 
       <p
@@ -51,7 +58,7 @@ export default function HomeScreen({
           maxWidth: 280,
         }}
       >
-        Contemple os mistérios com tranquilidade e sem distrações.
+        {t.subtitle}
       </p>
 
       <div className="flex flex-col gap-3 w-full" style={{ maxWidth: 320 }}>
@@ -72,10 +79,10 @@ export default function HomeScreen({
               fontWeight: 600,
             }}
           >
-            Terço do Dia
+            {t.daily}
           </span>
           <span style={{ fontSize: "0.75rem", opacity: 0.75, fontWeight: 300 }}>
-            {todayTitle} · {todayDay}
+            {t.dailySub(todayTitle, todayDay)}
           </span>
         </button>
 
@@ -97,11 +104,27 @@ export default function HomeScreen({
               fontWeight: 600,
             }}
           >
-            Rosário Completo
+            {t.full}
           </span>
           <span style={{ fontSize: "0.75rem", color: "var(--text-light)", fontWeight: 300 }}>
-            Todos os 20 mistérios
+            {t.fullSub}
           </span>
+        </button>
+
+        {/* Language toggle */}
+        <button
+          onClick={onToggleLang}
+          className="cursor-pointer"
+          style={{
+            background: "none",
+            border: "none",
+            fontSize: "0.8rem",
+            color: "var(--text-light)",
+            padding: "0.25rem",
+            textAlign: "center",
+          }}
+        >
+          🌐 {t.langBtn}
         </button>
       </div>
     </div>

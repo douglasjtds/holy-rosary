@@ -1,6 +1,14 @@
 'use client';
 
-export default function DevFooter() {
+import { Lang, ui } from '../data/i18n';
+
+interface DevFooterProps {
+  lang: Lang;
+}
+
+export default function DevFooter({ lang }: DevFooterProps) {
+  const text = ui[lang].dev.text;
+
   return (
     <p
       style={{
@@ -14,7 +22,7 @@ export default function DevFooter() {
         opacity: 0.4,
       }}
     >
-      conheça o desenvolvedor:{' '}
+      {text}{' '}
       <a
         href="https://github.com/douglasjtds"
         target="_blank"

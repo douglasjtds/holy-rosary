@@ -1,13 +1,18 @@
 'use client';
 
-import { mysterySets } from '../data/mysteries';
+import { MysterySet } from '../data/mysteries';
+import { Lang, ui } from '../data/i18n';
 
 interface SelectionScreenProps {
   onSelect: (setIdx: number) => void;
   onBack: () => void;
+  lang: Lang;
+  sets: MysterySet[];
 }
 
-export default function SelectionScreen({ onSelect, onBack }: SelectionScreenProps) {
+export default function SelectionScreen({ onSelect, onBack, lang, sets }: SelectionScreenProps) {
+  const t = ui[lang].selection;
+
   return (
     <div
       className="screen-enter absolute inset-0 flex flex-col items-center justify-center gap-6 p-8"
@@ -21,11 +26,11 @@ export default function SelectionScreen({ onSelect, onBack }: SelectionScreenPro
           color: "var(--text)",
         }}
       >
-        Escolha o início
+        {t.heading}
       </h2>
 
       <div className="flex flex-col gap-2 w-full" style={{ maxWidth: 320 }}>
-        {mysterySets.map((set, idx) => (
+        {sets.map((set, idx) => (
           <button
             key={idx}
             onClick={() => onSelect(idx)}
@@ -71,7 +76,7 @@ export default function SelectionScreen({ onSelect, onBack }: SelectionScreenPro
           padding: "0.5rem",
         }}
       >
-        ← Voltar
+        {t.back}
       </button>
     </div>
   );

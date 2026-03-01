@@ -1,5 +1,8 @@
 'use client';
 
+import { CSSProperties } from 'react';
+import { Lang, ui } from '../data/i18n';
+
 function MoonIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ display: 'block' }}>
@@ -29,10 +32,13 @@ function SunIcon() {
 interface ThemeToggleButtonProps {
   isDark: boolean;
   onToggle: () => void;
-  style?: React.CSSProperties;
+  lang: Lang;
+  style?: CSSProperties;
 }
 
-export default function ThemeToggleButton({ isDark, onToggle, style }: ThemeToggleButtonProps) {
+export default function ThemeToggleButton({ isDark, onToggle, lang, style }: ThemeToggleButtonProps) {
+  const t = ui[lang].theme;
+
   return (
     <button
       onClick={onToggle}
@@ -50,7 +56,7 @@ export default function ThemeToggleButton({ isDark, onToggle, style }: ThemeTogg
         flexShrink: 0,
         ...style,
       }}
-      aria-label={isDark ? 'Ativar tema claro' : 'Ativar tema escuro'}
+      aria-label={isDark ? t.toLight : t.toDark}
     >
       {isDark ? <SunIcon /> : <MoonIcon />}
     </button>
