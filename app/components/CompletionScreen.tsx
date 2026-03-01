@@ -1,5 +1,8 @@
 'use client';
 
+import DonationBanner from './DonationBanner';
+import DevFooter from './DevFooter';
+
 interface CompletionScreenProps {
   onHome: () => void;
 }
@@ -48,6 +51,10 @@ export default function CompletionScreen({ onHome }: CompletionScreenProps) {
           Voltar ao início
         </span>
       </button>
+
+      <DonationBanner />
+
+      <DevFooter />
     </div>
   );
 }

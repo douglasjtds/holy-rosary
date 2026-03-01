@@ -1,6 +1,8 @@
 'use client';
 
 import { MysterySet } from '../data/mysteries';
+import DonationBanner from './DonationBanner';
+import DevFooter from './DevFooter';
 
 interface TransitionScreenProps {
   nextSet: MysterySet;
@@ -72,6 +74,10 @@ export default function TransitionScreen({ nextSet, onContinue, onHome }: Transi
       >
         Encerrar
       </button>
+
+      <DonationBanner />
+
+      <DevFooter />
     </div>
   );
 }
