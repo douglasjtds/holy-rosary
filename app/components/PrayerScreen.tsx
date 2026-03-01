@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { MysterySet } from '../data/mysteries';
+import { Lang } from '../data/i18n';
 import ThemeToggleButton from './ThemeToggleButton';
 
 interface PrayerScreenProps {
@@ -13,6 +14,7 @@ interface PrayerScreenProps {
   onHome: () => void;
   isDark: boolean;
   onToggleTheme: () => void;
+  lang: Lang;
 }
 
 type SlideState =
@@ -28,6 +30,7 @@ export default function PrayerScreen({
   onHome,
   isDark,
   onToggleTheme,
+  lang,
 }: PrayerScreenProps) {
   const [slideState, setSlideState] = useState<SlideState>({ phase: 'idle', idx: startAt });
   const slideStateRef = useRef(slideState);
@@ -189,6 +192,7 @@ export default function PrayerScreen({
         <ThemeToggleButton
           isDark={isDark}
           onToggle={onToggleTheme}
+          lang={lang}
           style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)' }}
         />
         <div

@@ -1,13 +1,17 @@
 'use client';
 
+import { Lang, ui } from '../data/i18n';
 import DonationBanner from './DonationBanner';
 import DevFooter from './DevFooter';
 
 interface CompletionScreenProps {
   onHome: () => void;
+  lang: Lang;
 }
 
-export default function CompletionScreen({ onHome }: CompletionScreenProps) {
+export default function CompletionScreen({ onHome, lang }: CompletionScreenProps) {
+  const t = ui[lang].completion;
+
   return (
     <div
       className="screen-enter absolute inset-0 flex flex-col items-center justify-center gap-6 p-8 text-center"
@@ -23,11 +27,11 @@ export default function CompletionScreen({ onHome }: CompletionScreenProps) {
           color: "var(--text)",
         }}
       >
-        Oração concluída
+        {t.title}
       </h2>
 
       <p style={{ fontSize: "0.9rem", color: "var(--text-light)", lineHeight: 1.6, maxWidth: 280 }}>
-        Que os mistérios contemplados iluminem o seu dia.
+        {t.quote}
       </p>
 
       <button
@@ -48,13 +52,13 @@ export default function CompletionScreen({ onHome }: CompletionScreenProps) {
             fontWeight: 600,
           }}
         >
-          Voltar ao início
+          {t.backBtn}
         </span>
       </button>
 
-      <DonationBanner />
+      {lang === 'pt' && <DonationBanner lang={lang} />}
 
-      <DevFooter />
+      <DevFooter lang={lang} />
     </div>
   );
 }

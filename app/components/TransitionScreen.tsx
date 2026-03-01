@@ -1,6 +1,7 @@
 'use client';
 
 import { MysterySet } from '../data/mysteries';
+import { Lang, ui } from '../data/i18n';
 import DonationBanner from './DonationBanner';
 import DevFooter from './DevFooter';
 
@@ -8,9 +9,12 @@ interface TransitionScreenProps {
   nextSet: MysterySet;
   onContinue: () => void;
   onHome: () => void;
+  lang: Lang;
 }
 
-export default function TransitionScreen({ nextSet, onContinue, onHome }: TransitionScreenProps) {
+export default function TransitionScreen({ nextSet, onContinue, onHome, lang }: TransitionScreenProps) {
+  const t = ui[lang].transition;
+
   return (
     <div
       className="screen-enter absolute inset-0 flex flex-col items-center justify-center gap-4 p-8 text-center"
@@ -24,7 +28,7 @@ export default function TransitionScreen({ nextSet, onContinue, onHome }: Transi
           letterSpacing: "0.1em",
         }}
       >
-        Próximo terço
+        {t.label}
       </div>
 
       <h2
@@ -57,7 +61,7 @@ export default function TransitionScreen({ nextSet, onContinue, onHome }: Transi
             fontWeight: 600,
           }}
         >
-          Continuar
+          {t.continueBtn}
         </span>
       </button>
 
@@ -72,12 +76,12 @@ export default function TransitionScreen({ nextSet, onContinue, onHome }: Transi
           padding: "0.5rem",
         }}
       >
-        Encerrar
+        {t.endBtn}
       </button>
 
-      <DonationBanner />
+      {lang === 'pt' && <DonationBanner lang={lang} />}
 
-      <DevFooter />
+      <DevFooter lang={lang} />
     </div>
   );
 }

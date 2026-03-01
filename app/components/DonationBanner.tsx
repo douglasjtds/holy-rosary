@@ -1,6 +1,14 @@
 'use client';
 
-export default function DonationBanner() {
+import { Lang, ui } from '../data/i18n';
+
+interface DonationBannerProps {
+  lang: Lang;
+}
+
+export default function DonationBanner({ lang }: DonationBannerProps) {
+  const label = ui[lang].donation.label;
+
   return (
     <div
       style={{
@@ -25,7 +33,7 @@ export default function DonationBanner() {
           fontWeight: 600,
         }}
       >
-        pelas vítimas da chuva em Minas Gerais
+        {label}
       </span>
       <span
         style={{

@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { dayMap, dayNames, mysterySets } from './data/mysteries';
+import { startTransition, useEffect, useState } from 'react';
+import { dayMap, dayNames, dayNames_en, mysterySets, mysterySets_en } from './data/mysteries';
+import { Lang } from './data/i18n';
 import HomeScreen from './components/HomeScreen';
 import SelectionScreen from './components/SelectionScreen';
 import PrayerScreen from './components/PrayerScreen';
@@ -27,15 +28,27 @@ function buildFullRosaryOrder(startIdx: number): number[] {
 }
 
 export default function Home() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('theme') === 'dark';
-  });
+  const [isDark, setIsDark] = useState(false);
+  const [lang, setLang] = useState<Lang>('pt');
+
+  // Read preferences from localStorage only after hydration to avoid SSR mismatch
+  useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    const savedLang = localStorage.getItem('lang');
+    startTransition(() => {
+      if (theme === 'dark') setIsDark(true);
+      if (savedLang === 'en') setLang('en');
+    });
+  }, []);
 
   useEffect(() => {
     document.documentElement.dataset.theme = isDark ? 'dark' : '';
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }, [isDark]);
+
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+  }, [lang]);
 
   const [screen, setScreen] = useState<Screen>('home');
   const [session, setSession] = useState<Session>({
@@ -87,7 +100,7 @@ export default function Home() {
       ...s,
       fullRosaryStep: prevStep,
       setIndex: prevSetIndex,
-      startAt: 4, // land on mystery 5 of the previous set
+      startAt: 4,
     }));
     setScreen('prayer');
   }
@@ -103,13 +116,17 @@ export default function Home() {
   }
 
   const toggleTheme = () => setIsDark(d => !d);
+  const toggleLang = () => setLang(l => l === 'pt' ? 'en' : 'pt');
 
-  const todaySet = mysterySets[todaySetIdx];
-  const currentSet = mysterySets[session.setIndex];
+  const sets = lang === 'en' ? mysterySets_en : mysterySets;
+  const names = lang === 'en' ? dayNames_en : dayNames;
+
+  const todaySet = sets[todaySetIdx];
+  const currentSet = sets[session.setIndex];
   const nextSet =
     session.isFullRosary && session.fullRosaryStep < 4
-      ? mysterySets[session.fullRosaryOrder[session.fullRosaryStep]]
-      : mysterySets[0];
+      ? sets[session.fullRosaryOrder[session.fullRosaryStep]]
+      : sets[0];
 
   const canGoPrev = session.isFullRosary && session.fullRosaryStep > 0;
 
@@ -123,6 +140,7 @@ export default function Home() {
         <ThemeToggleButton
           isDark={isDark}
           onToggle={toggleTheme}
+          lang={lang}
           style={{
             position: 'absolute',
             top: 'calc(env(safe-area-inset-top, 0px) + 0.75rem)',
@@ -135,14 +153,16 @@ export default function Home() {
       {screen === 'home' && (
         <HomeScreen
           todayTitle={todaySet.title}
-          todayDay={dayNames[todayDow]}
+          todayDay={names[todayDow]}
           onStartDaily={startDaily}
           onShowSelection={() => setScreen('selection')}
+          lang={lang}
+          onToggleLang={toggleLang}
         />
       )}
 
       {screen === 'selection' && (
-        <SelectionScreen onSelect={startFull} onBack={goHome} />
+        <SelectionScreen onSelect={startFull} onBack={goHome} lang={lang} sets={sets} />
       )}
 
       {screen === 'prayer' && (
@@ -156,6 +176,7 @@ export default function Home() {
           onHome={goHome}
           isDark={isDark}
           onToggleTheme={toggleTheme}
+          lang={lang}
         />
       )}
 
@@ -164,10 +185,11 @@ export default function Home() {
           nextSet={nextSet}
           onContinue={continueFullRosary}
           onHome={goHome}
+          lang={lang}
         />
       )}
 
-      {screen === 'completion' && <CompletionScreen onHome={goHome} />}
+      {screen === 'completion' && <CompletionScreen onHome={goHome} lang={lang} />}
     </div>
   );
 }
