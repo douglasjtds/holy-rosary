@@ -21,6 +21,25 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Santo Rosário",
   description: "Guia de oração do Santo Rosário em português.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "Santo Rosário",
+    description: "Guia de oração do Santo Rosário em português.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 1200,
+        alt: "Santo Rosário",
+      },
+    ],
+    type: "website",
+    locale: "pt_BR",
+  },
 };
 
 export const viewport: Viewport = {
