@@ -24,12 +24,12 @@ export default function DevFooter({ lang }: DevFooterProps) {
     >
       {text}{' '}
       <a
-        href="https://github.com/douglasjtds"
+        href="https://www.linkedin.com/in/douglasjtds/"
         target="_blank"
         rel="noopener noreferrer"
         style={{ color: 'inherit', textDecoration: 'underline' }}
       >
-        github.com/douglasjtds
+        linkedin.com/douglasjtds
       </a>
     </p>
   );
