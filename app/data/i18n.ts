@@ -35,6 +35,17 @@ export const ui = {
     dev: {
       text: 'conheça o desenvolvedor:',
     },
+    install: {
+      title: 'Instalar aplicativo',
+      description: 'Adicione o Santo Rosário à tela inicial para acesso rápido, como um app!',
+      installButton: 'Instalar',
+      dismissButton: 'Agora não',
+      iosTitle: 'Adicionar à Tela de Início',
+      iosStep1: 'Toque no botão Compartilhar',
+      iosStep2: 'Selecione "Adicionar à Tela de Início"',
+      iosStep3: 'Toque em "Adicionar"',
+      iosButton: 'Entendi',
+    },
   },
   en: {
     home: {
@@ -69,6 +80,17 @@ export const ui = {
     },
     dev: {
       text: 'meet the developer:',
+    },
+    install: {
+      title: 'Install app',
+      description: 'Add Holy Rosary to your home screen for quick access, like an app!',
+      installButton: 'Install',
+      dismissButton: 'Not now',
+      iosTitle: 'Add to Home Screen',
+      iosStep1: 'Tap the Share button',
+      iosStep2: 'Select "Add to Home Screen"',
+      iosStep3: 'Tap "Add"',
+      iosButton: 'Got it',
     },
   },
 } as const;

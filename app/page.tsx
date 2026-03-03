@@ -8,7 +8,9 @@ import SelectionScreen from './components/SelectionScreen';
 import PrayerScreen from './components/PrayerScreen';
 import TransitionScreen from './components/TransitionScreen';
 import CompletionScreen from './components/CompletionScreen';
+import InstallModal from './components/InstallModal';
 import ThemeToggleButton from './components/ThemeToggleButton';
+import { useInstallPrompt } from './hooks/useInstallPrompt';
 
 type Screen = 'home' | 'selection' | 'prayer' | 'transition' | 'completion';
 
@@ -118,6 +120,8 @@ export default function Home() {
   const toggleTheme = () => setIsDark(d => !d);
   const toggleLang = () => setLang(l => l === 'pt' ? 'en' : 'pt');
 
+  const { showInstallModal, isIOS, promptInstall, dismissInstall } = useInstallPrompt();
+
   const sets = lang === 'en' ? mysterySets_en : mysterySets;
   const names = lang === 'en' ? dayNames_en : dayNames;
 
@@ -190,6 +194,15 @@ export default function Home() {
       )}
 
       {screen === 'completion' && <CompletionScreen onHome={goHome} lang={lang} />}
+
+      {screen === 'home' && showInstallModal && (
+        <InstallModal
+          isIOS={isIOS}
+          lang={lang}
+          onInstall={promptInstall}
+          onDismiss={dismissInstall}
+        />
+      )}
     </div>
   );
 }

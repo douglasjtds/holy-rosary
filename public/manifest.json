@@ -1,11 +1,14 @@
 {
+  "id": "/",
   "name": "Santo Rosário",
   "short_name": "Rosário",
-  "description": "Guia de oração do Santo Rosário.",
+  "description": "Guia de oração do Santo Rosário em português e em inglês. Reze o terço diário ou o rosário completo.",
+  "lang": "pt-BR",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAF6F1",
   "theme_color": "#8B6F47",
+  "categories": ["lifestyle", "education"],
   "icons": [
     {
       "src": "/icon-192x192.png",
