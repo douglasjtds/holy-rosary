@@ -20,7 +20,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Santo Rosário",
-  description: "Guia de oração do Santo Rosário em português.",
+  description: "Guia de oração do Santo Rosário em português e em inglês.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Santo Rosário",
-    description: "Guia de oração do Santo Rosário em português.",
+    description: "Guia de oração do Santo Rosário em português e em inglês.",
     images: [
       {
         url: "/og-image.png",
