@@ -17,7 +17,7 @@ There are no tests configured in this project.
 
 ## Project Purpose
 
-A Holy Rosary (Santo Rosário) prayer guide app in Brazilian Portuguese. Users can pray the daily mystery set (chosen automatically by day of the week) or the full rosary (all 20 mysteries across 4 sets).
+A Holy Rosary (Santo Rosário) prayer guide app supporting Brazilian Portuguese and English. Users can pray the daily mystery set (chosen automatically by day of the week) or the full rosary (all 20 mysteries across 4 sets).
 
 ## Architecture
 
@@ -25,11 +25,12 @@ A Holy Rosary (Santo Rosário) prayer guide app in Brazilian Portuguese. Users c
 
 ### Key files
 
-- `app/page.tsx` — top-level state machine (`Screen` + `Session` state), renders one screen at a time
-- `app/data/mysteries.ts` — all data: `mysterySets` (4 sets × 5 mysteries), `dayMap` (DOW → set index), `dayNames`, TypeScript interfaces
-- `app/globals.css` — CSS custom properties (colors, fonts), global resets, `screen-enter` and slide animation keyframes
+- `app/page.tsx` — top-level state machine (`Screen` + `Session` state), renders one screen at a time; also holds `isDark` and `lang` state (both persisted to `localStorage` after hydration to avoid SSR mismatch)
+- `app/data/mysteries.ts` — all data: `mysterySets` + `mysterySets_en` (4 sets × 5 mysteries each), `dayMap` (DOW → set index), `dayNames` / `dayNames_en`, TypeScript interfaces
+- `app/data/i18n.ts` — `Lang` type (`'pt' | 'en'`) + `ui` object with all UI strings for both languages; components receive a `lang` prop and read strings via `ui[lang].*`
+- `app/globals.css` — CSS custom properties for light/dark themes, global resets, `screen-enter` and slide animation keyframes; dark mode activated via `[data-theme="dark"]` on `<html>`
 - `app/layout.tsx` — Crimson Text + Inter fonts via `next/font/google`, `lang="pt-BR"`, `viewportFit: cover`
-- `app/components/` — one file per screen: `HomeScreen`, `SelectionScreen`, `PrayerScreen`, `TransitionScreen`, `CompletionScreen`
+- `app/components/` — one file per screen: `HomeScreen`, `SelectionScreen`, `PrayerScreen`, `TransitionScreen`, `CompletionScreen`; plus `ThemeToggleButton` (moon/sun icon), `DonationBanner`, `DevFooter`
 - `inspiration/rosario.html` — original single-file HTML prototype (reference only, not used at runtime)
 
 ### State machine (`app/page.tsx`)
@@ -43,7 +44,7 @@ A Holy Rosary (Santo Rosário) prayer guide app in Brazilian Portuguese. Users c
 - Tailwind utilities for layout (`flex`, `gap`, `rounded`, etc.)
 - Inline `style` props for brand colors via CSS vars (`var(--accent)`, `var(--bg)`, etc.)
 - Inline `fontFamily` for serif: `"var(--font-crimson), Georgia, serif"`
-- Brand CSS vars defined in `globals.css`: `--bg`, `--bg-dark`, `--text`, `--text-light`, `--accent`, `--accent-light`, `--gold`
+- Brand CSS vars defined in `globals.css`: `--bg`, `--bg-dark`, `--text`, `--text-light`, `--accent`, `--accent-light`, `--gold`; overridden under `[data-theme="dark"]` (toggled via `document.documentElement.dataset.theme`)
 - Each mystery set has its own `color` hex used for titles and accents
 
 ### PrayerScreen slide animation
