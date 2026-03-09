@@ -9,6 +9,7 @@ import PrayerScreen from './components/PrayerScreen';
 import TransitionScreen from './components/TransitionScreen';
 import CompletionScreen from './components/CompletionScreen';
 import ThemeToggleButton from './components/ThemeToggleButton';
+import InstallPrompt from './components/InstallPrompt';
 
 type Screen = 'home' | 'selection' | 'prayer' | 'transition' | 'completion';
 
@@ -149,6 +150,8 @@ export default function Home() {
           }}
         />
       )}
+
+      {screen === 'home' && <InstallPrompt lang={lang} />}
 
       {screen === 'home' && (
         <HomeScreen

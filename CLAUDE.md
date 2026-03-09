@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 nvm use v22.11.0  # Required — Next.js needs Node >= 20 (default v18 will fail)
 npm run dev       # Start development server at http://localhost:3000
 npm run build     # Build for production
+npm run start     # Serve production build locally
 npm run lint      # Run ESLint
 ```
 
@@ -32,6 +33,7 @@ A Holy Rosary (Santo Rosário) prayer guide app supporting Brazilian Portuguese 
 - `app/layout.tsx` — Crimson Text + Inter fonts via `next/font/google`, `lang="pt-BR"`, `viewportFit: cover`
 - `app/components/` — one file per screen: `HomeScreen`, `SelectionScreen`, `PrayerScreen`, `TransitionScreen`, `CompletionScreen`; plus `ThemeToggleButton` (moon/sun icon), `DonationBanner`, `DevFooter`
 - `inspiration/rosario.html` — original single-file HTML prototype (reference only, not used at runtime)
+- `public/manifest.json` — PWA web app manifest (standalone display, icons at 192×192 and 512×512)
 
 ### State machine (`app/page.tsx`)
 
