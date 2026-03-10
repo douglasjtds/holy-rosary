@@ -35,6 +35,15 @@ export const ui = {
     dev: {
       text: 'conheça o desenvolvedor:',
     },
+    install: {
+      banner: 'Adicione à tela inicial',
+      installBtn: 'Instalar',
+      iosTitle: 'Instalar no iPhone',
+      iosStep1: 'Toque em ↑ na barra do Safari',
+      iosStep2: "Toque em 'Adicionar à Tela de Início'",
+      okBtn: 'Entendi',
+      close: 'Fechar'
+    },
   },
   en: {
     home: {
@@ -69,6 +78,15 @@ export const ui = {
     },
     dev: {
       text: 'meet the developer:',
+    },
+    install: {
+      banner: 'Add to home screen',
+      installBtn: 'Install',
+      iosTitle: 'Install on iPhone',
+      iosStep1: 'Tap ↑ in the Safari toolbar',
+      iosStep2: "Tap 'Add to Home Screen'",
+      okBtn: 'Got it',
+      close: 'Close'
     },
   },
 } as const;
