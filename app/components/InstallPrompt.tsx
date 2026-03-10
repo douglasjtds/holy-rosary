@@ -133,7 +133,7 @@ export default function InstallPrompt({ lang }: Props) {
         </button>
         <button
           onClick={handleDismiss}
-          aria-label="Fechar"
+          aria-label={t.close}
           style={{
             background: 'none',
             border: 'none',
