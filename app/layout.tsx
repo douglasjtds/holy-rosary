@@ -67,6 +67,13 @@ export default function RootLayout({
             gtag('config', '${GA_ID}');
           `}
         </Script>
+        <Script id="register-sw" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js');
+            }
+          `}
+        </Script>
       </head>
       <body className={`${crimsonText.variable} ${inter.variable}`}>
         {children}
