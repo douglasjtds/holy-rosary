@@ -103,7 +103,7 @@ export default function InstallPrompt({ lang }: Props) {
           animation: 'screenEnter 0.35s ease forwards',
         }}
       >
-        <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>📿</span>
+        <span style={{ fontSize: '1.25rem', flexShrink: 0 }}>✞</span>
         <span
           style={{
             flex: 1,
