@@ -30,7 +30,7 @@ export const ui = {
       toLight: 'Ativar tema claro',
     },
     donation: {
-      label: 'Pelas vítimas das chuvas em Minas Gerais',
+      label: 'Obra de Nossa Senhora de Guadalupe',
     },
     dev: {
       text: 'conheça o desenvolvedor:',

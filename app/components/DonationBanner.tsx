@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Lang, ui } from '../data/i18n';
 
-const PIX_KEY = '42712365/0001-99';
+const PIX_KEY = 'doe@virgemdeguadalupe.com';
 
 interface DonationBannerProps {
   lang: Lang;
@@ -54,15 +54,15 @@ export default function DonationBanner({ lang }: DonationBannerProps) {
           lineHeight: 1.3,
         }}
       >
-        Ajude Juiz de Fora!
+        Uma obra iluminada pela devoção à Nossa Senhora de Guadalupe
       </span>
       <a
-        href="https://www.instagram.com/_projetoserluz?igsh=MXVtbWgwbmN6NmhydA=="
+        href="https://virgemdeguadalupe.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio"
         target="_blank"
         rel="noopener noreferrer"
         style={{ fontSize: '0.8rem', color: 'var(--text-light)', textDecoration: 'none' }}
       >
-        @_projetoserluz
+        CLIQUE NO SITE DO PROJETO <br></br>(confiado ao Frei Gilson)
       </a>
       <div
         style={{
