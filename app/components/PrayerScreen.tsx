@@ -295,7 +295,7 @@ export default function PrayerScreen({
             width: 48,
             height: 48,
             border: "1.5px solid rgba(139, 111, 71, 0.2)",
-            background: "#FFF",
+            background: "var(--bg-dark)",
             color: "var(--accent)",
             fontSize: "1.2rem",
           }}
@@ -327,7 +327,7 @@ export default function PrayerScreen({
             width: 48,
             height: 48,
             border: "1.5px solid rgba(139, 111, 71, 0.2)",
-            background: "#FFF",
+            background: "var(--bg-dark)",
             color: "var(--accent)",
             fontSize: "1.2rem",
           }}
